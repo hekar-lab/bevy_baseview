@@ -4,30 +4,31 @@
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering;
 
+use bevy::window::RawHandleWrapper;
 use raw_window_handle::HasRawWindowHandle;
-use raw_window_handle::RawWindowHandle;
+use raw_window_handle::HasRawDisplayHandle;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
 
-use bevy_baseview_plugin::{AppProxy, ParentWin};
+use bevy_baseview_plugin::{AppProxy, ParentWindow};
 
 // Window size (logical).
 const WINDOW_WIDTH: f64 = 500.0;
 const WINDOW_HEIGHT: f64 = 400.0;
 
-struct AppWrapper<F: Fn(ParentWin, f64, f64) -> AppProxy> {
+struct AppWrapper<F: Fn(ParentWindow, f64, f64) -> AppProxy> {
     initialized: AtomicBool,
-    parent_win: ParentWin,
+    parent_win: ParentWindow,
     create_app: F,
     app: Option<AppProxy>,
 }
 
-impl<F: Fn(ParentWin, f64, f64) -> AppProxy> AppWrapper<F> {
-    pub fn new(raw_window_handle: RawWindowHandle, create_app: F) -> Self {
-        let parent_win = ParentWin::from(raw_window_handle);
+impl<F: Fn(ParentWindow, f64, f64) -> AppProxy> AppWrapper<F> {
+    pub fn new(raw_handle: RawHandleWrapper, create_app: F) -> Self {
+        let parent_win = ParentWindow::from(raw_handle);
         let initialized = AtomicBool::new(false);
         Self {
             initialized,
@@ -65,14 +66,19 @@ impl<F: Fn(ParentWin, f64, f64) -> AppProxy> AppWrapper<F> {
     }
 }
 
-pub fn run_app<F: Fn(ParentWin, f64, f64) -> AppProxy + 'static>(create_app: F) {
+pub fn run_app<F: Fn(ParentWindow, f64, f64) -> AppProxy + 'static>(create_app: F) {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new()
         .with_inner_size(winit::dpi::PhysicalSize::new(WINDOW_WIDTH, WINDOW_HEIGHT))
         .build(&event_loop)
         .unwrap();
 
-    let mut app_wrapper = AppWrapper::new(window.raw_window_handle(), create_app);
+    let raw_handle = RawHandleWrapper {
+        window_handle: window.raw_window_handle(),
+        display_handle: window.raw_display_handle()
+    };
+
+    let mut app_wrapper = AppWrapper::new(raw_handle, create_app);
     event_loop.run(move |event, _, control_flow| {
         app_wrapper.receive_events(&window, event, control_flow)
     });

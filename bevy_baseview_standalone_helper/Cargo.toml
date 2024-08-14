@@ -5,8 +5,8 @@ edition = "2021"
 description = "A test harness for independently creating bevy applications for bevy_baseview_plugin"
 
 [dependencies]
-winit = { version = "0.26.0" }
-bevy = { version = "0.8.*" }
-baseview = { git = "https://github.com/RustAudio/baseview.git", rev = "eae4033e7d2cc9c31ccaa2794d5d08eedf2f510c" }
-bevy_baseview_plugin = { path = "../bevy_baseview_plugin" }
-raw-window-handle = "0.4.2"
+winit = { version = "0.28" }
+bevy = { version = "0.12.1" }
+baseview = { git = "https://github.com/RustAudio/baseview.git", rev = "579130ecb4f9f315ae52190af42f0ea46aeaa4a2" }
+bevy_baseview_plugin = { path = ".." }
+raw-window-handle = "0.5.2"

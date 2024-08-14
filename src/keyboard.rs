@@ -437,7 +437,7 @@ pub fn key_to_keycode(key: keyboard_types::Key) -> Option<BevyKeyCode> {
         // keyboard_types::Key::Again => Some(BevyKeyCode::TODO),
         // keyboard_types::Key::AllCandidates => Some(BevyKeyCode::TODO),
         // keyboard_types::Key::Alphanumeric => Some(BevyKeyCode::TODO),
-        keyboard_types::Key::Alt => Some(BevyKeyCode::RAlt), // TODO: Less accurate.
+        keyboard_types::Key::Alt => Some(BevyKeyCode::AltRight), // TODO: Less accurate.
         // keyboard_types::Key::AltGraph => Some(BevyKeyCode::TODO),
         // keyboard_types::Key::AppSwitch => Some(BevyKeyCode::TODO),
         keyboard_types::Key::ArrowDown => Some(BevyKeyCode::Down),
@@ -720,9 +720,9 @@ pub fn key_to_keycode(key: keyboard_types::Key) -> Option<BevyKeyCode> {
         keyboard_types::Key::ScrollLock => Some(BevyKeyCode::Scroll),
         // keyboard_types::Key::Select => Some(BevyKeyCode::TODO),
         // keyboard_types::Key::Settings => Some(BevyKeyCode::TODO),
-        keyboard_types::Key::Shift => Some(BevyKeyCode::LShift),
+        keyboard_types::Key::Shift => Some(BevyKeyCode::ShiftLeft),
         // keyboard_types::Key::SingleCandidate => Some(BevyKeyCode::TODO),
-        keyboard_types::Key::Super => Some(BevyKeyCode::LWin), // TODO:
+        keyboard_types::Key::Super => Some(BevyKeyCode::SuperLeft), // TODO:
         // keyboard_types::Key::Symbol => Some(BevyKeyCode::TODO),
         // keyboard_types::Key::SymbolLock => Some(BevyKeyCode::TODO),
         keyboard_types::Key::Tab => Some(BevyKeyCode::Tab),
