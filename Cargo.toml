@@ -1,5 +1,5 @@
 [package]
-name = "bevy_baseview_plugin"
+name = "bevy_baseview"
 version = "0.1.0"
 edition = "2021"
 description = "A baseview window and input backend for Bevy Engine"
@@ -8,31 +8,18 @@ description = "A baseview window and input backend for Bevy Engine"
 license = "MIT OR Apache-2.0"
 keywords = ["bevy", "baseview", "gui"]
 
-[features]
-default = []
-# Enables opengl contexts in baseview. Offered purely for compatibility, as bevy
-# relies heavily on wgpu by default.
-baseviewgl = []
-
 
 [dependencies]
 # baseview = { path = "../../baseview" }
 baseview = { git = "https://github.com/RustAudio/baseview.git", rev = "579130ecb4f9f315ae52190af42f0ea46aeaa4a2" }
-crossbeam = { version = "0.8.*" }
-crossbeam-channel = { version = "0.5.*" }
-lazy_static = "1.4.0"
 rwh_05 = { package = "raw-window-handle", version = "0.5.2"}
-# rwh_06 = { package = "raw-window-handle", version = "0.6.2"}
+lazy_static = "1.4.0"
 # bevy = { path = "../../bevy", version = "0.8.*" }
 bevy = { version = "0.12.1" }
 log = "0.4.17"
 keyboard-types = { version = "0.6.1", default-features = false }
 
-pollster = "0.3.0"
-wgpu = { version = "0.17.1"}
-bytemuck = {version = "1.15.0", features = ["derive"]}
-
 [dev-dependencies]
 # bevy = { path = "../../bevy", version = "0.8.*" }
 bevy = { version = "0.12.*" }
-bevy_baseview_standalone_helper = { path = "bevy_baseview_standalone_helper" }
+winit = { version = "0.28" }

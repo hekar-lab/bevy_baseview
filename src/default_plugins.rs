@@ -24,7 +24,7 @@ impl PluginGroup for DefaultBaseviewPlugins {
 
             .add(bevy::asset::AssetPlugin::default())
             .add(bevy::scene::ScenePlugin)
-            .add(crate::BaseviewPlugin::default())
+            //.add(crate::BaseviewPlugin::default())
             .add(bevy::render::RenderPlugin::default())
             //.add(crate::bullshit_render::BullshitRenderPlugin::default())
             .add(bevy::render::texture::ImagePlugin::default())

@@ -1,27 +1,60 @@
 //! Shows how to render simple primitive shapes with a single color.
 
 use bevy::app::App;
+use bevy::window::RawHandleWrapper;
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 
-use bevy_baseview_plugin::{attach_to, AppProxy, DefaultBaseviewPlugins, ParentWindow};
+use bevy_baseview::{DefaultBaseviewPlugins, ParentWindow};
+
+use rwh_05::{HasRawDisplayHandle, HasRawWindowHandle};
+use winit::event::WindowEvent;
+use winit::event_loop::{ControlFlow, EventLoop};
+use winit::window::WindowBuilder;
+
+// Window size (logical).
+const WINDOW_WIDTH: f64 = 500.0;
+const WINDOW_HEIGHT: f64 = 400.0;
 
 fn main() {
-    bevy_baseview_standalone_helper::run_app(create_app);
-}
+    let event_loop = EventLoop::new();
+    let window = WindowBuilder::new()
+        .with_inner_size(winit::dpi::PhysicalSize::new(WINDOW_WIDTH, WINDOW_HEIGHT))
+        .build(&event_loop)
+        .unwrap();
 
-fn create_app(parent_win: ParentWindow, width: f64, height: f64) -> AppProxy {
-    // Initailize the app.
-    let mut app = App::new();
+    let raw_handle = RawHandleWrapper {
+        window_handle: window.raw_window_handle(),
+        display_handle: window.raw_display_handle()
+    };
+
+    let parent_window = ParentWindow::from(raw_handle);
     let window_open_options = baseview::WindowOpenOptions {
         title: "Shapes example".to_string(),
-        size: baseview::Size::new(width, height),
+        size: baseview::Size::new(WINDOW_WIDTH, WINDOW_HEIGHT),
         scale: baseview::WindowScalePolicy::SystemScaleFactor,
     };
-    let proxy = attach_to(&mut app, &window_open_options, parent_win);
+    bevy_baseview::open_parented(
+        parent_window, 
+        window_open_options,
+        build
+    );
+
+    event_loop.run(move |event, _, control_flow| {
+        *control_flow = ControlFlow::Poll;
+
+        match event {
+            winit::event::Event::WindowEvent {
+                event: WindowEvent::CloseRequested,
+                window_id,
+            } if window_id == window.id() => *control_flow = ControlFlow::Exit,
+            _ => (),
+        }
+    });
+}
+
+fn build(app: &mut App) -> &mut App {
     app.add_plugins(DefaultBaseviewPlugins)
         .add_systems(Startup, setup)
-        .run();
-    proxy
 }
 
 fn setup(
