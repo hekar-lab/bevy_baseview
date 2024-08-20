@@ -4,7 +4,7 @@ mod keyboard;
 mod parent_window;
 mod default_plugins;
 
-use std::time::Duration;
+use std::sync::Arc;
 
 use bevy::ecs::system::SystemState;
 use bevy::log::info;
@@ -16,16 +16,16 @@ use bevy::window::{PrimaryWindow, RawHandleWrapper, Window, WindowCreated};
 use rwh_05::{HasRawDisplayHandle, HasRawWindowHandle};
 use window::BevyWindow;
 
-pub use parent_window::ParentWindow;
 pub use default_plugins::DefaultBaseviewPlugins;
 
-pub fn open_parented<B>(
-    parent_window: ParentWindow,
+pub fn open_parented<P, B>(
+    parent_window: P,
     window_open_options: baseview::WindowOpenOptions,
     app_builder: B
-) 
+) -> baseview::WindowHandle
     where
-    B: FnOnce(&mut App) -> &mut App + Send + 'static
+    P: HasRawWindowHandle,
+    B: FnOnce(&mut App) -> &mut App + Send + Sync + 'static
 {
     baseview::Window::open_parented(
         &parent_window, 
@@ -75,5 +75,5 @@ pub fn open_parented<B>(
 
             BevyWindow::new(app)
         }
-    );
+    )
 }

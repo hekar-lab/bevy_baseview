@@ -11,14 +11,14 @@ impl PluginGroup for DefaultBaseviewPlugins {
         // NOTE: Load this after renderer initialization so that it knows about the supported
         // compressed texture formats
         PluginGroupBuilder::start::<DefaultBaseviewPlugins>()
-            .add(bevy::log::LogPlugin::default())
+            //.add(bevy::log::LogPlugin::default())
             .add(bevy::core::TaskPoolPlugin::default())
             .add(bevy::core::TypeRegistrationPlugin)
             .add(bevy::core::FrameCountPlugin)
             .add(bevy::time::TimePlugin)
             .add(bevy::transform::TransformPlugin)
             .add(bevy::hierarchy::HierarchyPlugin)
-            .add(bevy::diagnostic::DiagnosticsPlugin)
+            //.add(bevy::diagnostic::DiagnosticsPlugin)
             .add(bevy::input::InputPlugin)
             .add(bevy::window::WindowPlugin::default())
 
