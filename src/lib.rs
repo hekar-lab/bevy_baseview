@@ -13,6 +13,7 @@ use bevy::prelude::{Commands, Entity, EventWriter, FromWorld, Query, With};
 use bevy::app::{App, PluginsState};
 use bevy::window::{PrimaryWindow, RawHandleWrapper, Window, WindowCreated};
 
+use parent_window::{OldRawDisplayHandle, OldRawWindowHandle};
 use rwh_05::{HasRawDisplayHandle, HasRawWindowHandle};
 use window::BevyWindow;
 
@@ -65,8 +66,8 @@ pub fn open_parented<P, B>(
             commands
                 .entity(entity)
                 .insert(RawHandleWrapper{
-                    window_handle: window.raw_window_handle(),
-                    display_handle: window.raw_display_handle(),
+                    window_handle: OldRawWindowHandle(window.raw_window_handle()).into(),
+                    display_handle: OldRawDisplayHandle(window.raw_display_handle()).into(),
                 });
 
             event_writer.send(WindowCreated { window: entity });

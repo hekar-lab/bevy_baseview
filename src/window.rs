@@ -133,6 +133,7 @@ impl BevyWindow {
                                 cursor_moved_events.send(CursorMoved {
                                     window: entity,
                                     position: position.as_vec2(),
+                                    delta: None,
                                 });
                             },
                             Err(err) => {
@@ -233,15 +234,15 @@ impl BevyWindow {
             baseview::Event::Keyboard(e) => {
                 match window_entity.get_single_mut(){
                     Ok((entity, _window)) => {
-                        let key_code = keyboard::key_to_keycode(e.key);
+                        let key_code = keyboard::key_to_keycode(e.key.clone());
                         let state = match e.state {
                             keyboard_types::KeyState::Down => ButtonState::Pressed,
                             keyboard_types::KeyState::Up => ButtonState::Released,
                         };
                         let event = KeyboardInput {
                             window: entity,
-                            scan_code: keyboard::code_to_scancode(e.code),
                             key_code,
+                            logical_key: keyboard::key_to_bevy_key(e.key),
                             state,
                         };
                         keyboard_input_events.send(event);
@@ -274,7 +275,7 @@ impl BevyWindow {
                                     });
         
                                     self.last_scale_factor = window_info.scale();
-                                    window.resolution.set_scale_factor(self.last_scale_factor);
+                                    window.resolution.set_scale_factor(self.last_scale_factor as f32);
                                 }
         
                                 window.resolution.set_physical_resolution(
