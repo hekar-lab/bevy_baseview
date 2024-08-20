@@ -94,7 +94,7 @@ impl BevyWindow {
             EventWriter<WindowBackendScaleFactorChanged>,
 
             Query<(Entity, &mut Window), With<PrimaryWindow>>,
-        )> = SystemState::from_world(&mut self.app.world);
+        )> = SystemState::from_world(self.app.world_mut());
 
         let (
             //mut close_app_requests,
@@ -115,7 +115,7 @@ impl BevyWindow {
             mut window_backend_scale_factor_changed_events,
 
             mut window_entity
-        ) = process_event_system_state.get_mut(&mut self.app.world);
+        ) = process_event_system_state.get_mut(self.app.world_mut());
 
         // for _ in close_app_requests.read() {
         //     status.shutdown = true;
@@ -332,13 +332,13 @@ impl baseview::WindowHandler for BevyWindow {
             EventWriter<RequestRedraw>,
 
             Query<(Entity, &mut Window), With<PrimaryWindow>>,
-        )> = SystemState::from_world(&mut self.app.world);
+        )> = SystemState::from_world(self.app.world_mut());
 
         let (
             mut request_redraw_events,
 
             mut window_entity,
-        ) = frame_system_state.get_mut(&mut self.app.world);
+        ) = frame_system_state.get_mut(self.app.world_mut());
 
         request_redraw_events.send(RequestRedraw);
 

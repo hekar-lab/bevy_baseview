@@ -3,9 +3,6 @@
 use baseview::gl::GlConfig;
 use bevy::app::App;
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use bevy::math::prelude::Circle;
-use bevy::math::prelude::Rectangle;
-use bevy::math::prelude::RegularPolygon;
 
 use bevy_baseview::DefaultBaseviewPlugins;
 
@@ -79,7 +76,7 @@ fn setup(
     // Circle
     commands.spawn(MaterialMesh2dBundle {
         mesh: meshes.add(Circle::new(50.)).into(),
-        material: materials.add(ColorMaterial::from(Color::BEIGE)),
+        material: materials.add(ColorMaterial::from(Color::BLACK)),
         transform: Transform::from_translation(Vec3::new(-150., 0., 0.)),
         ..default()
     });
@@ -87,7 +84,7 @@ fn setup(
     // Rectangle
     commands.spawn(SpriteBundle {
         sprite: Sprite {
-            color: Color::rgb(0.25, 0.25, 0.75),
+            color: Color::oklab(0.25, 0.25, 0.75),
             custom_size: Some(Vec2::new(50.0, 100.0)),
             ..default()
         },
@@ -100,7 +97,7 @@ fn setup(
         mesh: meshes
             .add(Rectangle::new(50., 100.))
             .into(),
-        material: materials.add(ColorMaterial::from(Color::BISQUE)),
+        material: materials.add(ColorMaterial::from(Color::BLACK)),
         transform: Transform::from_translation(Vec3::new(50., 0., 0.)),
         ..default()
     });
@@ -108,7 +105,7 @@ fn setup(
     // Hexagon
     commands.spawn(MaterialMesh2dBundle {
         mesh: meshes.add(RegularPolygon::new(50., 6)).into(),
-        material: materials.add(ColorMaterial::from(Color::TURQUOISE)),
+        material: materials.add(ColorMaterial::from(Color::BLACK)),
         transform: Transform::from_translation(Vec3::new(150., 0., 0.)),
         ..default()
     });

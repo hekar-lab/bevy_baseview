@@ -1,33 +1,52 @@
 use std::{num::NonZero, ptr::NonNull};
 
-use bevy::window::RawHandleWrapper;
+use rwh_05::{HasRawDisplayHandle, HasRawWindowHandle};
 
 #[derive(Clone, Debug)]
-pub struct ParentWindow(RawHandleWrapper);
+pub struct RawWindow{
+    window_handle: rwh_06::RawWindowHandle,
+    display_handle: rwh_06::RawDisplayHandle
+}
 
-unsafe impl rwh_06::HasRawWindowHandle for ParentWindow {
-    fn raw_window_handle(&self) -> Result<rwh_06::RawWindowHandle, rwh_06::HandleError> {
-        Ok(self.0.window_handle)
+unsafe impl Send for RawWindow {}
+unsafe impl Sync for RawWindow {}
+
+impl rwh_06::HasWindowHandle for RawWindow {
+    fn window_handle(&self) -> Result<rwh_06::WindowHandle<'_>, rwh_06::HandleError> {
+        Ok(unsafe {
+            rwh_06::WindowHandle::borrow_raw(self.window_handle)
+        })
     }
 }
 
-unsafe impl rwh_06::HasRawDisplayHandle for ParentWindow {
-    fn raw_display_handle(&self) -> Result<rwh_06::RawDisplayHandle, rwh_06::HandleError>  {
-        Ok(self.0.display_handle)
+impl rwh_06::HasDisplayHandle for RawWindow {
+    fn display_handle(&self) -> Result<rwh_06::DisplayHandle<'_>, rwh_06::HandleError> {
+        Ok(unsafe {
+            rwh_06::DisplayHandle::borrow_raw(self.display_handle)
+        })
     }
 }
 
-impl From<RawHandleWrapper> for ParentWindow {
-    fn from(inst: RawHandleWrapper) -> Self {
-        ParentWindow(inst)
+impl RawWindow {
+    pub fn new(window: &baseview::Window) -> Self{
+        Self {
+            window_handle: OldRawWindowHandle(window.raw_window_handle()).into(),
+            display_handle: OldRawDisplayHandle(window.raw_display_handle()).into()
+        }
     }
 }
 
-impl Into<RawHandleWrapper> for ParentWindow {
-    fn into(self) -> RawHandleWrapper {
-        self.0
-    }
-}
+// impl From<RawHandleWrapper> for ParentWindow {
+//     fn from(inst: RawHandleWrapper) -> Self {
+//         ParentWindow(inst)
+//     }
+// }
+
+// impl Into<RawHandleWrapper> for ParentWindow {
+//     fn into(self) -> RawHandleWrapper {
+//         self.0
+//     }
+// }
 
 pub struct OldRawWindowHandle(pub rwh_05::RawWindowHandle);
 pub struct OldRawDisplayHandle(pub rwh_05::RawDisplayHandle);
