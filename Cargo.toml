@@ -14,11 +14,11 @@ default = ["opengl"]
 opengl = ["baseview/opengl"]
 
 [dependencies]
-baseview = { git = "https://github.com/RustAudio/baseview.git", rev = "579130ecb4f9f315ae52190af42f0ea46aeaa4a2" }
+baseview = { git = "https://github.com/RustAudio/baseview.git", rev = "cd4df61f5578479af1b93de2946dd2b515ddcc77" }
 rwh_05 = { package = "raw-window-handle", version = "0.5"}
 rwh_06 = { package = "raw-window-handle", version = "0.6"}
 
-bevy = { version = "0.15.0-rc.2", default-features = false, features = [
+bevy = { version = "0.15", default-features = false, features = [
   "animation",
   "bevy_asset",
   "bevy_state",
@@ -30,6 +30,7 @@ bevy = { version = "0.15.0-rc.2", default-features = false, features = [
   "bevy_sprite",
   "bevy_text",
   "bevy_ui",
+  "bevy_window",
   "multi_threaded",
   "png",
   "hdr",

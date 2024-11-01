@@ -29,7 +29,7 @@ impl PluginGroup for DefaultBaseviewPlugins {
             //.add(crate::bullshit_render::BullshitRenderPlugin::default())
             .add(bevy::render::texture::ImagePlugin::default())
             .add(bevy::core_pipeline::CorePipelinePlugin)
-            .add(bevy::sprite::SpritePlugin)
+            .add(bevy::sprite::SpritePlugin::default())
             .add(bevy::text::TextPlugin)
             .add(bevy::ui::UiPlugin::default())
             .add(bevy::pbr::PbrPlugin::default())
