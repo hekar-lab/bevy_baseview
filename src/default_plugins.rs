@@ -31,7 +31,7 @@ impl PluginGroup for DefaultBaseviewPlugins {
             .add(bevy::core_pipeline::CorePipelinePlugin)
             .add(bevy::sprite::SpritePlugin)
             .add(bevy::text::TextPlugin)
-            .add(bevy::ui::UiPlugin)
+            .add(bevy::ui::UiPlugin::default())
             .add(bevy::pbr::PbrPlugin::default())
             //.add(bevy::gltf::GltfPlugin::default())
             //.add(bevy::gilrs::GilrsPlugin)

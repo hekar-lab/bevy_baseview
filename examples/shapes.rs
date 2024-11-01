@@ -2,7 +2,7 @@
 
 use baseview::gl::GlConfig;
 use bevy::app::App;
-use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
+use bevy::prelude::*;
 
 use bevy_baseview::DefaultBaseviewPlugins;
 
@@ -66,47 +66,46 @@ fn build(app: &mut App) -> &mut App {
         .add_systems(Startup, setup)
 }
 
+const X_EXTENT: f32 = 900.;
+
 fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
 
-    // Circle
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(Circle::new(50.)).into(),
-        material: materials.add(ColorMaterial::from(Color::BLACK)),
-        transform: Transform::from_translation(Vec3::new(-150., 0., 0.)),
-        ..default()
-    });
+    let shapes = [
+        meshes.add(Circle::new(50.0)),
+        meshes.add(CircularSector::new(50.0, 1.0)),
+        meshes.add(CircularSegment::new(50.0, 1.25)),
+        meshes.add(Ellipse::new(25.0, 50.0)),
+        meshes.add(Annulus::new(25.0, 50.0)),
+        meshes.add(Capsule2d::new(25.0, 50.0)),
+        meshes.add(Rhombus::new(75.0, 100.0)),
+        meshes.add(Rectangle::new(50.0, 100.0)),
+        meshes.add(RegularPolygon::new(50.0, 6)),
+        meshes.add(Triangle2d::new(
+            Vec2::Y * 50.0,
+            Vec2::new(-50.0, -50.0),
+            Vec2::new(50.0, -50.0),
+        )),
+    ];
+    let num_shapes = shapes.len();
 
-    // Rectangle
-    commands.spawn(SpriteBundle {
-        sprite: Sprite {
-            color: Color::oklab(0.25, 0.25, 0.75),
-            custom_size: Some(Vec2::new(50.0, 100.0)),
-            ..default()
-        },
-        transform: Transform::from_translation(Vec3::new(-50., 0., 0.)),
-        ..default()
-    });
+    for (i, shape) in shapes.into_iter().enumerate() {
+        // Distribute colors evenly across the rainbow.
+        let color = Color::hsl(360. * i as f32 / num_shapes as f32, 0.95, 0.7);
 
-    // Quad
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes
-            .add(Rectangle::new(50., 100.))
-            .into(),
-        material: materials.add(ColorMaterial::from(Color::BLACK)),
-        transform: Transform::from_translation(Vec3::new(50., 0., 0.)),
-        ..default()
-    });
-
-    // Hexagon
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(RegularPolygon::new(50., 6)).into(),
-        material: materials.add(ColorMaterial::from(Color::BLACK)),
-        transform: Transform::from_translation(Vec3::new(150., 0., 0.)),
-        ..default()
-    });
+        commands.spawn((
+            Mesh2d(shape),
+            MeshMaterial2d(materials.add(color)),
+            Transform::from_xyz(
+                // Distribute shapes from -X_EXTENT/2 to +X_EXTENT/2.
+                -X_EXTENT / 2. + i as f32 / (num_shapes - 1) as f32 * X_EXTENT,
+                0.0,
+                0.0,
+            ),
+        ));
+    }
 }

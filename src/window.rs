@@ -1,5 +1,4 @@
 use std::collections::VecDeque;
-use std::sync::atomic::{AtomicU64, Ordering};
 
 use bevy::input::ButtonState;
 use bevy::ecs::system::SystemState;
@@ -15,18 +14,11 @@ use bevy::window::{
     CursorEntered, CursorLeft, CursorMoved, PrimaryWindow, RequestRedraw, Window, WindowBackendScaleFactorChanged, WindowFocused, WindowResized, WindowScaleFactorChanged
 };
 
-use lazy_static::lazy_static;
-
 use crate::conversions;
 use crate::keyboard;
 
-lazy_static! {
-    static ref BEVY_WINDOW_ID: AtomicU64 = AtomicU64::new(0);
-}
-
 #[derive(Debug)]
 pub struct BevyWindow {
-    id: u64,
     app: App,
     last_scale_factor: f64,
     pending_events: VecDeque<baseview::Event>,
@@ -39,17 +31,11 @@ struct EventStatus {
 
 impl BevyWindow {
     pub fn new(app: App) -> Self {
-        let id = BEVY_WINDOW_ID.fetch_add(1, Ordering::AcqRel);
         Self {
-            id,
             app,
             last_scale_factor: 1.0,
             pending_events: VecDeque::new(),
         }
-    }
-
-    pub fn id(&self) -> u64 {
-        self.id
     }
 
     fn process_pending_events(&mut self) -> EventStatus {
@@ -243,6 +229,7 @@ impl BevyWindow {
                             window: entity,
                             key_code,
                             logical_key: keyboard::key_to_bevy_key(e.key),
+                            repeat: e.repeat,
                             state,
                         };
                         keyboard_input_events.send(event);
